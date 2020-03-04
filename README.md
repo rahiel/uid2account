@@ -1,8 +1,10 @@
 # uid2account
 
-This script parses the output of "check_quota.pl - nagios plugin to check Linux
-filesystem quotas using repquota" to show users with their account names instead
-of their guid.
+This script parses the output of "[check_quota.pl][] - nagios plugin to check
+Linux filesystem quotas using repquota" to show users with their account names
+instead of their guid.
+
+[check_quota.pl]: https://github.com/fkrueger/check_quota
 
 ## Installation
 
