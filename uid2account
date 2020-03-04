@@ -1,0 +1,42 @@
+#!/usr/bin/env python3
+# ﷽
+# uid2account - parse check_quota.pl output to show uids as account names
+# Author: Rahiel Kasim
+# License: Apache License 2.0 (see LICENSE.txt)
+import fileinput
+import re
+import subprocess
+
+
+def main():
+    start = []
+    users = []
+    end = []
+
+    for line in fileinput.input():
+        regex = r"uid\s(\d+)"
+        u = re.search(regex, line)
+        if u:
+            uid = u.group(1)
+            try:
+                s = subprocess.run(["id", uid], check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                user = s.stdout.decode("utf-8")
+                a = re.search(r"uid={}\((\w+)\)".format(uid), user)
+                if a:
+                    account = a.group(1)
+                    line = re.sub(regex, "{:16}".format(account), line, count=1)
+            except subprocess.CalledProcessError:
+                pass
+            users.append(line)
+        elif not users:
+            start.append(line)
+        elif users:
+            end.append(line)
+
+    lines = start + sorted(users) + end
+    for l in lines:
+        print(l, end="")
+
+
+if __name__ == "__main__":
+    main()
